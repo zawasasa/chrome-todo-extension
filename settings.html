@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスク設定 - 平日タスク管理</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>タスク設定</h1>
+            <button id="back-btn" class="back-btn">← 戻る</button>
+        </header>
+
+        <main class="main-content">
+            <!-- タスク追加フォーム -->
+            <section class="add-task-section">
+                <h2>新しいタスクを追加</h2>
+                <form id="task-form" class="task-form">
+                    <div class="form-group">
+                        <label for="task-name">タスク名</label>
+                        <input type="text" id="task-name" name="taskName" required
+                               placeholder="例: メールチェック">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-type">実行頻度</label>
+                        <select id="task-type" name="taskType" required>
+                            <option value="">選択してください</option>
+                            <option value="daily">毎日（月〜金）</option>
+                            <option value="weekly">毎週（指定曜日）</option>
+                            <option value="monthly">毎月（指定日）</option>
+                        </select>
+                    </div>
+
+                    <!-- 毎週の場合の曜日選択 -->
+                    <div id="weekly-options" class="form-group" style="display: none;">
+                        <label>実行曜日</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weekdays" value="1"> 月曜日
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weekdays" value="2"> 火曜日
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weekdays" value="3"> 水曜日
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weekdays" value="4"> 木曜日
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weekdays" value="5"> 金曜日
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 毎月の場合の日付選択 -->
+                    <div id="monthly-options" class="form-group" style="display: none;">
+                        <label for="monthly-day">実行日</label>
+                        <select id="monthly-day" name="monthlyDay">
+                            <option value="">選択してください</option>
+                            <option value="1">1日</option>
+                            <option value="5">5日</option>
+                            <option value="10">10日</option>
+                            <option value="15">15日</option>
+                            <option value="20">20日</option>
+                            <option value="25">25日</option>
+                            <option value="last">月末</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">タスクを追加</button>
+                </form>
+            </section>
+
+            <!-- 登録済みタスク一覧 -->
+            <section class="task-list-section">
+                <h2>登録済みタスク</h2>
+                <div id="registered-tasks" class="registered-tasks">
+                    <div id="no-registered-tasks" class="no-tasks" style="display: none;">
+                        <p>登録されたタスクはありません</p>
+                    </div>
+                    <div id="task-list-container"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 編集モーダル -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>タスクを編集</h3>
+                <button id="close-modal" class="close-btn">×</button>
+            </div>
+            <form id="edit-form" class="task-form">
+                <div class="form-group">
+                    <label for="edit-task-name">タスク名</label>
+                    <input type="text" id="edit-task-name" name="taskName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-task-type">実行頻度</label>
+                    <select id="edit-task-type" name="taskType" required>
+                        <option value="daily">毎日（月〜金）</option>
+                        <option value="weekly">毎週（指定曜日）</option>
+                        <option value="monthly">毎月（指定日）</option>
+                    </select>
+                </div>
+
+                <div id="edit-weekly-options" class="form-group" style="display: none;">
+                    <label>実行曜日</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="editWeekdays" value="1"> 月曜日
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="editWeekdays" value="2"> 火曜日
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="editWeekdays" value="3"> 水曜日
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="editWeekdays" value="4"> 木曜日
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="editWeekdays" value="5"> 金曜日
+                        </label>
+                    </div>
+                </div>
+
+                <div id="edit-monthly-options" class="form-group" style="display: none;">
+                    <label for="edit-monthly-day">実行日</label>
+                    <select id="edit-monthly-day" name="monthlyDay">
+                        <option value="1">1日</option>
+                        <option value="5">5日</option>
+                        <option value="10">10日</option>
+                        <option value="15">15日</option>
+                        <option value="20">20日</option>
+                        <option value="25">25日</option>
+                        <option value="last">月末</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-edit" class="cancel-btn">キャンセル</button>
+                    <button type="submit" class="submit-btn">更新</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
