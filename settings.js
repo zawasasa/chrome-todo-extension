@@ -1,29 +1,48 @@
 class SettingsManager {
   constructor() {
     this.tasks = []
+    this.activityLog = []
     this.editingTaskId = null
-    this.chrome = window.chrome // Declare the chrome variable
     this.init()
   }
 
   async init() {
     await this.loadTasks()
+    await this.loadActivityLog()
     this.setupEventListeners()
     this.renderTaskList()
+    this.renderActivityLog()
   }
 
   async loadTasks() {
     try {
-      const result = await this.chrome.storage.local.get(["tasks"])
+      const result = await chrome.storage.local.get(["tasks"])
       this.tasks = result.tasks || []
     } catch (error) {
       console.error("タスクの読み込みに失敗しました:", error)
     }
   }
 
+  async loadActivityLog() {
+    try {
+      const result = await chrome.storage.local.get(["activityLog"])
+      this.activityLog = result.activityLog || []
+    } catch (error) {
+      console.error("ログの読み込みに失敗しました:", error)
+    }
+  }
+
+  async saveActivityLog() {
+    try {
+      await chrome.storage.local.set({ activityLog: this.activityLog })
+    } catch (error) {
+      console.error("ログの保存に失敗しました:", error)
+    }
+  }
+
   async saveTasks() {
     try {
-      await this.chrome.storage.local.set({ tasks: this.tasks })
+      await chrome.storage.local.set({ tasks: this.tasks })
     } catch (error) {
       console.error("タスクの保存に失敗しました:", error)
     }
@@ -266,6 +285,72 @@ class SettingsManager {
         return `毎月（${task.day}日）`
       default:
         return ""
+    }
+  }
+
+  renderActivityLog() {
+    const container = document.getElementById("log-entries")
+    const noLogMessage = document.getElementById("no-log-data")
+
+    if (this.activityLog.length === 0) {
+      noLogMessage.style.display = "block"
+      container.innerHTML = ""
+      return
+    }
+
+    noLogMessage.style.display = "none"
+    container.innerHTML = ""
+
+    // 最新のログを上に表示するため逆順にソート
+    const sortedLog = [...this.activityLog].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+
+    sortedLog.forEach((log) => {
+      const logElement = document.createElement("div")
+      logElement.className = "log-entry"
+
+      const actionText = this.getActionText(log.action)
+      const timeText = this.formatTime(log.timestamp)
+
+      logElement.innerHTML = `
+        <div class="log-action log-action-${log.action}">
+          ${actionText}<span class="log-task">${log.taskName}</span>
+        </div>
+        <div class="log-time">${timeText}</div>
+      `
+
+      container.appendChild(logElement)
+    })
+  }
+
+  getActionText(action) {
+    switch (action) {
+      case 'added':
+        return 'タスクを追加:'
+      case 'completed':
+        return 'タスクを完了:'
+      case 'deleted':
+        return 'タスクを削除:'
+      case 'postponed':
+        return 'タスクを延期:'
+      default:
+        return action + ':'
+    }
+  }
+
+  formatTime(timestamp) {
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diffTime = now.getTime() - date.getTime()
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+
+    if (diffDays === 0) {
+      return date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+    } else if (diffDays === 1) {
+      return '昨日 ' + date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+    } else if (diffDays < 7) {
+      return diffDays + '日前'
+    } else {
+      return date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
     }
   }
 

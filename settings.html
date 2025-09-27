@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>タスク設定 - 平日タスク管理</title>
+    <title>ささっとeverytodo - 設定</title>
     <link rel="stylesheet" href="settings.css">
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>タスク設定</h1>
+            <h1>ささっとeverytodo</h1>
+            <h2>タスク設定</h2>
             <button id="back-btn" class="back-btn">← 戻る</button>
         </header>
 
@@ -83,6 +84,17 @@
                         <p>登録されたタスクはありません</p>
                     </div>
                     <div id="task-list-container"></div>
+                </div>
+            </section>
+
+            <!-- ログ表示セクション -->
+            <section class="task-list-section">
+                <h2>活動ログ</h2>
+                <div id="activity-log" class="activity-log">
+                    <div id="no-log-data" class="no-tasks" style="display: none;">
+                        <p>ログデータはありません</p>
+                    </div>
+                    <div id="log-entries" class="log-entries"></div>
                 </div>
             </section>
         </main>

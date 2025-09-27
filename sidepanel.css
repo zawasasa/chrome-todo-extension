@@ -5,200 +5,774 @@
 }
 
 body {
+  width: 100%;
+  min-width: 280px;
+  max-width: 100vw;
+  min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #f8fafc;
-  color: #1e293b;
-  line-height: 1.6;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 400px;
-  margin: 0 auto;
+  background-color: #f8f9fa;
+  color: #333;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
 }
 
 .header {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #ff7733 0%, #ff9966 100%);
   color: white;
-  padding: 1rem;
+  padding: 20px;
   text-align: center;
   position: relative;
 }
 
+.header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
 .header h1 {
-  font-size: 1.25rem;
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
-.date-info {
-  font-size: 0.875rem;
-  opacity: 0.9;
-}
-
-.main-content {
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
-.weekend-message {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: #64748b;
-}
-
-.weekend-message p:first-child {
-  font-size: 1.125rem;
+.version-display {
+  font-size: 10px;
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 8px;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.current-date {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.action-buttons {
+  padding: 15px;
+  display: flex;
+  gap: 10px;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.btn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.weekday-message {
+  padding: 40px 20px;
+  text-align: center;
+  background: white;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.weekday-message p {
+  margin-bottom: 12px;
+  color: #6c757d;
+}
+
+.weekday-message p:first-child {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.task-container {
+  padding: 20px;
+}
+
+/* Today todo section */
+.today-todo-section {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #28a745;
+}
+
+.today-todo-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #28a745;
+}
+
+.input-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-section input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.input-section input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+}
+
+.input-section .btn {
+  padding: 8px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Postpone section */
+.postpone-section {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.postpone-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #856404;
+}
+
+.postpone-header p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #856404;
+}
+
+.postpone-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.postpone-actions .btn {
+  flex: 1;
+  padding: 10px 16px;
 }
 
 .no-tasks {
   text-align: center;
-  padding: 2rem 1rem;
-  color: #64748b;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-tasks p {
+  margin-bottom: 12px;
+  color: #6c757d;
+}
+
+.no-tasks p:first-child {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
 }
 
 .task-list {
   list-style: none;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .task-item {
   display: flex;
   align-items: center;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
-  background: white;
-  border-radius: 0.5rem;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-  transform: translateX(0);
+  padding: 16px;
+  border-bottom: 1px solid #f1f3f4;
+  transition: background-color 0.2s ease;
+}
+
+.task-item:last-child {
+  border-bottom: none;
 }
 
 .task-item:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-  transform: translateX(2px);
+  background-color: #f8f9fa;
 }
 
 .task-item.completed {
-  opacity: 0.6;
-  transform: scale(0.98);
+  background-color: #f8f9fa;
+  opacity: 0.7;
 }
 
 .task-checkbox {
-  margin-right: 0.75rem;
-  width: 1.125rem;
-  height: 1.125rem;
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  accent-color: #3b82f6;
 }
 
 .task-text {
   flex: 1;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-right: 12px;
 }
 
 .task-text.completed {
   text-decoration: line-through;
-  color: #64748b;
-  transform: translateX(4px);
+  color: #6c757d;
 }
 
 .task-type {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .task-type.daily {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+  background-color: #e3f2fd;
+  color: #1976d2;
 }
 
 .task-type.weekly {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #f3e5f5;
+  color: #7b1fa2;
 }
 
 .task-type.monthly {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: #e8f5e8;
+  color: #388e3c;
 }
 
-.footer {
-  padding: 1rem;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  gap: 0.5rem;
+.task-type.today-only {
+  background-color: #e8f6ff;
+  color: #0066cc;
 }
 
-.settings-btn,
-.refresh-btn {
-  flex: 1;
-  padding: 0.75rem;
+.task-type.postponed {
+  background-color: #fff0e6;
+  color: #cc6600;
+}
+
+.delete-btn {
+  background: none;
   border: none;
-  border-radius: 0.5rem;
-  font-weight: 500;
+  color: #dc3545;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 16px;
+  padding: 4px;
+  margin-left: 8px;
 }
 
-.settings-btn {
-  background-color: #3b82f6;
+.delete-btn:hover {
+  color: #a71e2a;
+}
+
+/* Mini Calendar */
+.mini-calendar {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  margin: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+.calendar-nav {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #666;
+  transition: background-color 0.2s;
+}
+
+.calendar-nav:hover {
+  background-color: #f0f0f0;
+}
+
+#calendar-month-year {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 8px;
+}
+
+.weekday {
+  text-align: center;
+  padding: 8px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  background-color: #f8f9fa;
+}
+
+.calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.calendar-day:hover {
+  background-color: #e3f2fd;
+}
+
+.calendar-day.empty {
+  cursor: default;
+  background-color: #f8f9fa;
+}
+
+.calendar-day.today {
+  background-color: #667eea;
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.today:hover {
+  background-color: #5a67d8;
+}
+
+.calendar-day.selected {
+  background-color: #28a745;
   color: white;
 }
 
-.settings-btn:hover {
-  background-color: #2563eb;
+.calendar-day.has-tasks::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #ff6b6b;
+  border-radius: 50%;
 }
 
-.refresh-btn {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+.calendar-day.today.has-tasks::after,
+.calendar-day.selected.has-tasks::after {
+  background-color: #ffd93d;
 }
 
-.refresh-btn:hover {
-  background-color: #e2e8f0;
+.calendar-preview {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.calendar-preview h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.preview-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.preview-task:last-child {
+  border-bottom: none;
+}
+
+.preview-task-text {
+  font-size: 13px;
+  color: #333;
+  flex: 1;
+  margin-right: 8px;
+}
+
+.preview-task-type {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-task-type.daily {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.preview-task-type.weekly {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.preview-task-type.monthly {
+  background-color: #e8f5e8;
+  color: #388e3c;
+}
+
+.preview-task-type.today-only {
+  background-color: #e8f6ff;
+  color: #0066cc;
+}
+
+.preview-task-type.postponed {
+  background-color: #fff0e6;
+  color: #cc6600;
+}
+
+.no-preview-tasks {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  padding: 16px;
+  margin: 0;
+}
+
+/* Future todo input in calendar */
+.future-todo-input {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.future-todo-input .input-section {
+  gap: 6px;
+}
+
+.future-todo-input input {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+
+.future-todo-input .btn {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* Future todo section in main view */
+.future-todo-section {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #667eea;
+}
+
+.future-todo-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.future-todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.date-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-section label {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.date-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* Preview task actions */
+.preview-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.preview-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-delete-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.preview-delete-btn:hover {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Original date display for postponed tasks */
+.original-date {
+  font-size: 11px;
+  color: #999;
+  font-weight: normal;
+  margin-left: 6px;
+  opacity: 0.8;
 }
 
 .progress-display {
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  font-size: 0.75rem;
+  font-size: 12px;
   background: rgba(255, 255, 255, 0.2);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
   font-weight: 500;
 }
 
-@media (max-width: 400px) {
-  .container {
-    font-size: 0.875rem;
+/* Responsive design for different sidepanel widths */
+@media (max-width: 320px) {
+  .header {
+    padding: 12px;
   }
 
   .header h1 {
-    font-size: 1.125rem;
+    font-size: 16px;
+  }
+
+  .version-display {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+
+  .current-date {
+    font-size: 12px;
+  }
+
+  .action-buttons {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .task-container {
+    padding: 12px;
+  }
+
+  .today-todo-section {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .today-todo-section h3 {
+    font-size: 13px;
+  }
+
+  .input-section input {
+    font-size: 13px;
+    padding: 6px 10px;
   }
 
   .task-item {
-    padding: 0.5rem;
+    padding: 10px;
   }
 
-  .footer {
-    padding: 0.75rem;
+  .task-text {
+    font-size: 13px;
   }
 
-  .progress-display {
-    position: static;
-    margin-top: 0.5rem;
-    text-align: center;
+  .task-type {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 400px) {
+  .header {
+    padding: 16px;
+  }
+
+  .action-buttons {
+    padding: 12px;
+  }
+
+  .task-container {
+    padding: 16px;
+  }
+
+  .task-item {
+    padding: 12px;
+  }
+}
+
+@media (min-width: 401px) and (max-width: 500px) {
+  .header {
+    padding: 20px 24px;
+  }
+
+  .action-buttons {
+    padding: 16px 20px;
+  }
+
+  .task-container {
+    padding: 20px 24px;
+  }
+
+  .today-todo-section {
+    padding: 18px;
+  }
+
+  .task-item {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 501px) {
+  .header {
+    padding: 24px 30px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .current-date {
+    font-size: 15px;
+  }
+
+  .action-buttons {
+    padding: 20px 30px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .task-container {
+    padding: 24px 30px;
+  }
+
+  .today-todo-section {
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .today-todo-section h3 {
+    font-size: 15px;
+  }
+
+  .input-section input {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+
+  .task-item {
+    padding: 18px;
+  }
+
+  .task-text {
+    font-size: 15px;
+  }
+
+  .task-type {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  .no-tasks {
+    padding: 50px 30px;
+  }
+
+  .postpone-section {
+    padding: 20px;
+    margin-top: 24px;
   }
 }
