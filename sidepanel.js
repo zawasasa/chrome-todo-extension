@@ -1,3 +1,11 @@
+// Helper function to get local date string without timezone issues
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 class TaskManager {
   constructor() {
     this.tasks = []
@@ -12,6 +20,9 @@ class TaskManager {
   }
 
   async init() {
+    // サイドパネルが開いたことを記録
+    await chrome.storage.local.set({ sidePanelOpen: true });
+
     await this.loadData()
     this.setupEventListeners()
     this.updateDisplay()
@@ -127,7 +138,7 @@ class TaskManager {
     })
 
     // Set minimum date for date picker to today
-    const today = new Date().toISOString().split('T')[0]
+    const today = getLocalDateString()
     document.getElementById('future-task-date').setAttribute('min', today)
   }
 
@@ -139,14 +150,14 @@ class TaskManager {
 
   getTodayString() {
     const today = new Date()
-    return today.toISOString().split('T')[0]
+    return getLocalDateString(today)
   }
 
   getNextDayString() {
     const today = new Date()
     const nextDay = new Date(today)
     nextDay.setDate(nextDay.getDate() + 1)
-    return nextDay.toISOString().split('T')[0]
+    return getLocalDateString(nextDay)
   }
 
   getNextWeekdayString() {
@@ -157,7 +168,7 @@ class TaskManager {
       nextDay.setDate(nextDay.getDate() + 1)
     } while (nextDay.getDay() === 0 || nextDay.getDay() === 6) // Skip weekends
 
-    return nextDay.toISOString().split('T')[0]
+    return getLocalDateString(nextDay)
   }
 
   getTodayTasks() {
@@ -343,6 +354,7 @@ class TaskManager {
     this.updateTodayTodoTitle()
     this.showTaskList()
     this.checkForIncompleteTasksAtEndOfDay()
+    this.checkForWeekendIncompleteTasks()
     this.updateProgressDisplay()
   }
 
@@ -402,7 +414,7 @@ class TaskManager {
       }
 
       const typeLabel = this.getTypeLabel(task.type)
-      const deleteButton = (task.type === 'today-only' || task.type === 'postponed') ?
+      const deleteButton = (task.type === 'today-only' || task.type === 'future' || task.type === 'past' || task.type === 'postponed') ?
         `<button class="delete-btn" data-task-id="${task.id}" title="削除">×</button>` : ''
 
       // Add original date info for postponed tasks
@@ -427,7 +439,7 @@ class TaskManager {
       const deleteBtn = li.querySelector('.delete-btn')
       if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
-          if (task.type === 'today-only' || task.type === 'postponed') {
+          if (task.type === 'today-only' || task.type === 'future' || task.type === 'past' || task.type === 'postponed') {
             this.deleteTodayOnlyTask(task.id)
           }
         })
@@ -447,6 +459,10 @@ class TaskManager {
         return '毎月'
       case 'today-only':
         return '今日のみ'
+      case 'future':
+        return '予定'
+      case 'past':
+        return '過去'
       case 'postponed':
         return '延期'
       default:
@@ -461,7 +477,7 @@ class TaskManager {
 
     const today = new Date()
     const originalDate = new Date(task.originalDate + 'T00:00:00')
-    const todayString = today.toISOString().split('T')[0]
+    const todayString = getLocalDateString(today)
 
     // Calculate days difference
     const diffTime = today.getTime() - originalDate.getTime()
@@ -507,6 +523,113 @@ class TaskManager {
 
   hidePosponeSection() {
     document.getElementById('postpone-section').style.display = 'none'
+  }
+
+  // Weekend incomplete tasks functionality
+  getWeekendIncompleteTasks() {
+    const today = new Date()
+    const todayString = getLocalDateString(today)
+    const weekendTasks = []
+
+    // Check up to 30 days back for weekend incomplete tasks
+    for (let i = 1; i <= 30; i++) {
+      const checkDate = new Date(today)
+      checkDate.setDate(checkDate.getDate() - i)
+      const dayOfWeek = checkDate.getDay()
+
+      // Check if it's weekend (Saturday or Sunday)
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        const dateString = getLocalDateString(checkDate)
+        const tasksForDate = this.getTasksForDate(dateString)
+
+        if (tasksForDate.length > 0) {
+          // Check if there are incomplete tasks
+          const incompleteTasks = tasksForDate.filter(task => {
+            const completedForDate = this.completedTasks[dateString]
+            return !completedForDate || !completedForDate[task.id]
+          })
+
+          if (incompleteTasks.length > 0) {
+            weekendTasks.push({
+              date: checkDate,
+              dateString: dateString,
+              tasks: incompleteTasks
+            })
+          }
+        }
+      }
+    }
+
+    return weekendTasks.reverse() // Show oldest first
+  }
+
+  checkForWeekendIncompleteTasks() {
+    const today = new Date()
+    const dayOfWeek = today.getDay()
+
+    // Only show on weekdays (Monday to Friday)
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      const weekendTasks = this.getWeekendIncompleteTasks()
+
+      if (weekendTasks.length > 0) {
+        this.showWeekendWarningSection(weekendTasks)
+      } else {
+        this.hideWeekendWarningSection()
+      }
+    } else {
+      this.hideWeekendWarningSection()
+    }
+  }
+
+  showWeekendWarningSection(weekendTasks) {
+    const section = document.getElementById('weekend-warning-section')
+    const tasksList = document.getElementById('weekend-tasks-list')
+
+    tasksList.innerHTML = ''
+
+    weekendTasks.forEach(({ date, dateString, tasks }) => {
+      const dayOfWeek = date.getDay()
+      const dayName = dayOfWeek === 0 ? '日' : '土'
+      const options = { month: 'numeric', day: 'numeric' }
+      const formattedDate = date.toLocaleDateString('ja-JP', options)
+
+      const groupDiv = document.createElement('div')
+      groupDiv.className = 'weekend-task-group'
+
+      const dateDiv = document.createElement('div')
+      dateDiv.className = 'weekend-task-date'
+      dateDiv.textContent = `${formattedDate}(${dayName})`
+      groupDiv.appendChild(dateDiv)
+
+      tasks.forEach(task => {
+        const taskDiv = document.createElement('div')
+        taskDiv.className = 'weekend-task-item'
+        taskDiv.textContent = task.name
+        groupDiv.appendChild(taskDiv)
+      })
+
+      tasksList.appendChild(groupDiv)
+    })
+
+    section.style.display = 'block'
+  }
+
+  hideWeekendWarningSection() {
+    document.getElementById('weekend-warning-section').style.display = 'none'
+  }
+
+  hasIncompleteTasks(dateString) {
+    const tasksForDate = this.getTasksForDate(dateString)
+    if (tasksForDate.length === 0) {
+      return false
+    }
+
+    const completedForDate = this.completedTasks[dateString]
+    const incompleteTasks = tasksForDate.filter(task => {
+      return !completedForDate || !completedForDate[task.id]
+    })
+
+    return incompleteTasks.length > 0
   }
 
   escapeHtml(text) {
@@ -612,12 +735,12 @@ class TaskManager {
 
     // Add days of the month
     const today = new Date()
-    const todayString = today.toISOString().split('T')[0]
+    const todayString = getLocalDateString(today)
 
     for (let day = 1; day <= daysInMonth; day++) {
       const dayEl = document.createElement('div')
-      const dayDate = new Date(year, month, day)
-      const dayString = dayDate.toISOString().split('T')[0]
+      // Fix: Construct date string manually to avoid timezone issues
+      const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 
       dayEl.className = 'calendar-day'
       dayEl.textContent = day
@@ -630,6 +753,11 @@ class TaskManager {
       // Check if this day has tasks
       if (this.getTasksForDate(dayString).length > 0) {
         dayEl.classList.add('has-tasks')
+      }
+
+      // Check if this day has incomplete tasks (past dates only)
+      if (dayString < todayString && this.hasIncompleteTasks(dayString)) {
+        dayEl.classList.add('has-incomplete-tasks')
       }
 
       // Add click handler
@@ -652,7 +780,7 @@ class TaskManager {
     this.selectedDate = dateString
 
     // Show/hide future todo input based on date
-    const today = new Date().toISOString().split('T')[0]
+    const today = getLocalDateString()
     const futureInputEl = document.getElementById('future-todo-input')
 
     if (dateString >= today) {
@@ -672,6 +800,7 @@ class TaskManager {
     const isLastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() === dayOfMonth
     const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5
 
+    const todayString = getLocalDateString()
     let tasks = []
 
     // Get routine tasks (only on weekdays)
@@ -698,7 +827,7 @@ class TaskManager {
     const todayOnly = this.todayOnlyTasks[dateString] || []
     const todayOnlyTaskObjects = todayOnly.map(task => ({
       ...task,
-      type: 'today-only'
+      type: dateString === todayString ? 'today-only' : (dateString > todayString ? 'future' : 'past')
     }))
     tasks = [...tasks, ...todayOnlyTaskObjects]
 
@@ -728,29 +857,89 @@ class TaskManager {
       return
     }
 
-    const taskHtml = tasks.map(task => {
+    previewContainer.innerHTML = ''
+
+    tasks.forEach(task => {
       const typeLabel = this.getTypeLabel(task.type)
-      const canDelete = (task.type === 'today-only' || task.type === 'postponed') && dateString >= new Date().toISOString().split('T')[0]
-      const deleteButton = canDelete ? `<button class="preview-delete-btn" onclick="taskManager.deleteFutureTodo(${task.id}, '${dateString}')">×</button>` : ''
+      const canModify = (task.type === 'today-only' || task.type === 'future' || task.type === 'past' || task.type === 'postponed')
+      const canDelete = canModify && dateString >= getLocalDateString()
 
       // Add original date info for preview
       const originalDateInfo = this.getOriginalDateInfo(task)
 
-      return `
-        <div class="preview-task">
-          <span class="preview-task-text">
-            ${this.escapeHtml(task.name)}
-            ${originalDateInfo}
-          </span>
-          <div class="preview-task-actions">
-            <span class="preview-task-type ${task.type}">${typeLabel}</span>
-            ${deleteButton}
-          </div>
-        </div>
-      `
-    }).join('')
+      const taskDiv = document.createElement('div')
+      taskDiv.className = 'preview-task'
+      taskDiv.id = `preview-task-${task.id}`
 
-    previewContainer.innerHTML = taskHtml
+      const taskText = document.createElement('span')
+      taskText.className = 'preview-task-text'
+      taskText.innerHTML = `${this.escapeHtml(task.name)}${originalDateInfo}`
+
+      const taskActions = document.createElement('div')
+      taskActions.className = 'preview-task-actions'
+
+      const typeSpan = document.createElement('span')
+      typeSpan.className = `preview-task-type ${task.type}`
+      typeSpan.textContent = typeLabel
+      taskActions.appendChild(typeSpan)
+
+      if (canModify) {
+        const moveBtn = document.createElement('button')
+        moveBtn.className = 'preview-move-btn'
+        moveBtn.textContent = '📅'
+        moveBtn.title = '日付を変更'
+        moveBtn.addEventListener('click', () => {
+          this.showMoveDatePicker(task.id, dateString)
+        })
+        taskActions.appendChild(moveBtn)
+      }
+
+      if (canDelete) {
+        const deleteBtn = document.createElement('button')
+        deleteBtn.className = 'preview-delete-btn'
+        deleteBtn.textContent = '×'
+        deleteBtn.addEventListener('click', () => {
+          this.deleteFutureTodo(task.id, dateString)
+        })
+        taskActions.appendChild(deleteBtn)
+      }
+
+      taskDiv.appendChild(taskText)
+      taskDiv.appendChild(taskActions)
+
+      // Date picker section
+      const pickerDiv = document.createElement('div')
+      pickerDiv.className = 'move-date-picker'
+      pickerDiv.id = `move-picker-${task.id}`
+      pickerDiv.style.display = 'none'
+
+      const dateInput = document.createElement('input')
+      dateInput.type = 'date'
+      dateInput.className = 'move-date-input'
+      dateInput.id = `move-date-${task.id}`
+      dateInput.min = getLocalDateString()
+
+      const moveConfirmBtn = document.createElement('button')
+      moveConfirmBtn.className = 'btn btn-primary btn-small'
+      moveConfirmBtn.textContent = '移動'
+      moveConfirmBtn.addEventListener('click', () => {
+        this.moveTask(task.id, dateString)
+      })
+
+      const cancelBtn = document.createElement('button')
+      cancelBtn.className = 'btn btn-secondary btn-small'
+      cancelBtn.textContent = '×'
+      cancelBtn.addEventListener('click', () => {
+        this.hideMoveDatePicker(task.id)
+      })
+
+      pickerDiv.appendChild(dateInput)
+      pickerDiv.appendChild(moveConfirmBtn)
+      pickerDiv.appendChild(cancelBtn)
+
+      taskDiv.appendChild(pickerDiv)
+      previewContainer.appendChild(taskDiv)
+    })
   }
 
   async addFutureTodoFromCalendar() {
@@ -833,6 +1022,112 @@ class TaskManager {
     }
   }
 
+  // Task moving functionality
+  showMoveDatePicker(taskId, currentDate) {
+    // Hide all other pickers first
+    document.querySelectorAll('.move-date-picker').forEach(picker => {
+      picker.style.display = 'none'
+    })
+
+    // Show this picker
+    const picker = document.getElementById(`move-picker-${taskId}`)
+    if (picker) {
+      picker.style.display = 'flex'
+      // Set current date as default
+      const dateInput = document.getElementById(`move-date-${taskId}`)
+      if (dateInput) {
+        dateInput.value = currentDate
+        dateInput.focus()
+
+        // Automatically open the date picker
+        try {
+          dateInput.showPicker()
+        } catch (error) {
+          // showPicker() not supported in some browsers, fallback to focus
+        }
+      }
+    }
+  }
+
+  hideMoveDatePicker(taskId) {
+    const picker = document.getElementById(`move-picker-${taskId}`)
+    if (picker) {
+      picker.style.display = 'none'
+    }
+  }
+
+  async moveTask(taskId, fromDate) {
+    const dateInput = document.getElementById(`move-date-${taskId}`)
+    if (!dateInput) return
+
+    const toDate = dateInput.value
+    if (!toDate || toDate === fromDate) {
+      this.hideMoveDatePicker(taskId)
+      return
+    }
+
+    // Find the task in either todayOnlyTasks or postponedTasks
+    let task = null
+    let taskSource = null
+
+    // Check todayOnlyTasks
+    if (this.todayOnlyTasks[fromDate]) {
+      task = this.todayOnlyTasks[fromDate].find(t => t.id === taskId)
+      if (task) {
+        taskSource = 'todayOnly'
+      }
+    }
+
+    // Check postponedTasks
+    if (!task && this.postponedTasks[fromDate]) {
+      task = this.postponedTasks[fromDate].find(t => t.id === taskId)
+      if (task) {
+        taskSource = 'postponed'
+      }
+    }
+
+    if (!task) {
+      this.showSuccessMessage('タスクが見つかりませんでした')
+      return
+    }
+
+    // Remove from source date
+    if (taskSource === 'todayOnly') {
+      this.todayOnlyTasks[fromDate] = this.todayOnlyTasks[fromDate].filter(t => t.id !== taskId)
+    } else if (taskSource === 'postponed') {
+      this.postponedTasks[fromDate] = this.postponedTasks[fromDate].filter(t => t.id !== taskId)
+    }
+
+    // Add to destination date (always as todayOnly task)
+    if (!this.todayOnlyTasks[toDate]) {
+      this.todayOnlyTasks[toDate] = []
+    }
+
+    const movedTask = {
+      id: Date.now() + Math.random(), // New ID to avoid conflicts
+      name: task.name,
+      createdAt: new Date().toISOString()
+    }
+
+    this.todayOnlyTasks[toDate].push(movedTask)
+    this.addActivityLog('moved', task.name, { from: fromDate, to: toDate })
+
+    await this.saveData()
+
+    // Refresh displays
+    this.renderCalendar()
+    if (this.selectedDate === fromDate) {
+      this.updateDatePreview(fromDate)
+    }
+
+    const fromDateObj = new Date(fromDate + 'T00:00:00')
+    const toDateObj = new Date(toDate + 'T00:00:00')
+    const fromStr = fromDateObj.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+    const toStr = toDateObj.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })
+
+    this.showSuccessMessage(`タスクを ${fromStr} から ${toStr} に移動しました`)
+  }
+
   getTaskNameById(taskId, taskType = null) {
     const todayString = this.getTodayString()
 
@@ -863,3 +1158,20 @@ let taskManager
 document.addEventListener('DOMContentLoaded', () => {
   taskManager = new TaskManager()
 })
+
+// サイドパネルを閉じるメッセージをリスン（タイムスタンプ方式）
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName === 'local' && changes.shouldCloseSidePanel) {
+    // 数値（タイムスタンプ）が設定されている場合は閉じる
+    if (changes.shouldCloseSidePanel.newValue &&
+        typeof changes.shouldCloseSidePanel.newValue === 'number') {
+      chrome.storage.local.set({ shouldCloseSidePanel: 0 });
+      window.close();
+    }
+  }
+});
+
+// サイドパネルが閉じる時
+window.addEventListener('beforeunload', async () => {
+  await chrome.storage.local.set({ sidePanelOpen: false });
+});

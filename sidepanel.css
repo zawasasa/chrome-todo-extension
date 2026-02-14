@@ -12,15 +12,16 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #f8f9fa;
   color: #333;
-  line-height: 1.5;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
+  font-size: 13px;
 }
 
 .header {
   background: linear-gradient(135deg, #ff7733 0%, #ff9966 100%);
   color: white;
-  padding: 20px;
+  padding: 10px 12px;
   text-align: center;
   position: relative;
 }
@@ -29,45 +30,45 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .header h1 {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   margin: 0;
 }
 
 .version-display {
-  font-size: 10px;
+  font-size: 9px;
   opacity: 0.7;
   background: rgba(255, 255, 255, 0.15);
-  padding: 2px 6px;
-  border-radius: 8px;
+  padding: 1px 4px;
+  border-radius: 6px;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .current-date {
-  font-size: 14px;
+  font-size: 12px;
   opacity: 0.9;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .action-buttons {
-  padding: 15px;
+  padding: 8px 10px;
   display: flex;
-  gap: 10px;
+  gap: 6px;
   background: white;
   border-bottom: 1px solid #e9ecef;
 }
 
 .btn {
   flex: 1;
-  padding: 8px 16px;
+  padding: 6px 10px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
@@ -92,118 +93,177 @@ body {
 }
 
 .weekday-message {
-  padding: 40px 20px;
+  padding: 20px 10px;
   text-align: center;
   background: white;
-  margin: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .weekday-message p {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #6c757d;
+  font-size: 12px;
 }
 
 .weekday-message p:first-child {
-  font-size: 16px;
+  font-size: 13px;
   color: #333;
   font-weight: 500;
 }
 
 .task-container {
-  padding: 20px;
+  padding: 10px;
 }
 
 /* Today todo section */
 .today-todo-section {
   background: white;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #28a745;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-left: 3px solid #28a745;
 }
 
 .today-todo-section h3 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-size: 13px;
   font-weight: 600;
   color: #28a745;
 }
 
 .input-section {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
 .input-section input {
   flex: 1;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .input-section input:focus {
   outline: none;
   border-color: #28a745;
-  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+  box-shadow: 0 0 0 1px rgba(40, 167, 69, 0.15);
 }
 
 .input-section .btn {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 6px 10px;
+  font-size: 12px;
   white-space: nowrap;
+}
+
+/* Weekend warning section */
+.weekend-warning-section {
+  background: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.weekend-warning-header h3 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  color: #cc0000;
+  font-weight: 600;
+}
+
+.weekend-warning-header p {
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  color: #aa0000;
+}
+
+.weekend-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.weekend-task-group {
+  background: white;
+  border-radius: 4px;
+  padding: 8px;
+  border-left: 3px solid #ff4444;
+}
+
+.weekend-task-date {
+  font-size: 11px;
+  font-weight: 600;
+  color: #cc0000;
+  margin-bottom: 4px;
+}
+
+.weekend-task-item {
+  font-size: 11px;
+  color: #333;
+  padding: 3px 0;
+  padding-left: 12px;
+  position: relative;
+}
+
+.weekend-task-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #ff4444;
 }
 
 /* Postpone section */
 .postpone-section {
   background: #fff3cd;
   border: 1px solid #ffeaa7;
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 20px;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 10px;
 }
 
 .postpone-header h3 {
-  margin: 0 0 8px 0;
-  font-size: 16px;
+  margin: 0 0 6px 0;
+  font-size: 13px;
   color: #856404;
 }
 
 .postpone-header p {
-  margin: 0 0 16px 0;
-  font-size: 14px;
+  margin: 0 0 10px 0;
+  font-size: 12px;
   color: #856404;
 }
 
 .postpone-actions {
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
 
 .postpone-actions .btn {
   flex: 1;
-  padding: 10px 16px;
+  padding: 6px 10px;
 }
 
 .no-tasks {
   text-align: center;
-  padding: 40px 20px;
+  padding: 20px 10px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .no-tasks p {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #6c757d;
+  font-size: 12px;
 }
 
 .no-tasks p:first-child {
-  font-size: 16px;
+  font-size: 13px;
   color: #333;
   font-weight: 500;
 }
@@ -211,15 +271,15 @@ body {
 .task-list {
   list-style: none;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 
 .task-item {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: 8px 10px;
   border-bottom: 1px solid #f1f3f4;
   transition: background-color 0.2s ease;
 }
@@ -238,17 +298,18 @@ body {
 }
 
 .task-checkbox {
-  margin-right: 12px;
-  width: 18px;
-  height: 18px;
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .task-text {
   flex: 1;
-  font-size: 14px;
-  line-height: 1.4;
-  margin-right: 12px;
+  font-size: 12px;
+  line-height: 1.3;
+  margin-right: 8px;
 }
 
 .task-text.completed {
@@ -257,12 +318,13 @@ body {
 }
 
 .task-type {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 12px;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 8px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
 
 .task-type.daily {
@@ -283,6 +345,16 @@ body {
 .task-type.today-only {
   background-color: #e8f6ff;
   color: #0066cc;
+}
+
+.task-type.future {
+  background-color: #f0e6ff;
+  color: #6600cc;
+}
+
+.task-type.past {
+  background-color: #f5f5f5;
+  color: #666666;
 }
 
 .task-type.postponed {
@@ -306,28 +378,28 @@ body {
 
 /* Mini Calendar */
 .mini-calendar {
-  padding: 20px;
+  padding: 10px;
   background: white;
-  border-radius: 8px;
-  margin: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  margin: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .calendar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  padding: 8px 0;
+  margin-bottom: 10px;
+  padding: 4px 0;
 }
 
 .calendar-nav {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
   color: #666;
   transition: background-color 0.2s;
 }
@@ -337,7 +409,7 @@ body {
 }
 
 #calendar-month-year {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
 }
@@ -346,13 +418,13 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .weekday {
   text-align: center;
-  padding: 8px 4px;
-  font-size: 12px;
+  padding: 4px 2px;
+  font-size: 10px;
   font-weight: 500;
   color: #666;
   background-color: #f8f9fa;
@@ -363,7 +435,7 @@ body {
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
   background-color: #e9ecef;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
@@ -373,7 +445,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: white;
-  font-size: 13px;
+  font-size: 11px;
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
@@ -419,15 +491,24 @@ body {
   background-color: #ffd93d;
 }
 
+.calendar-day.has-incomplete-tasks::before {
+  content: '⚠️';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  font-size: 8px;
+  line-height: 1;
+}
+
 .calendar-preview {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: 12px;
+  padding-top: 10px;
   border-top: 1px solid #e9ecef;
 }
 
 .calendar-preview h4 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-size: 12px;
   color: #333;
   font-weight: 600;
 }
@@ -436,7 +517,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #f1f3f4;
 }
 
@@ -445,19 +526,20 @@ body {
 }
 
 .preview-task-text {
-  font-size: 13px;
+  font-size: 11px;
   color: #333;
   flex: 1;
-  margin-right: 8px;
+  margin-right: 6px;
+  line-height: 1.3;
 }
 
 .preview-task-type {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 8px;
+  font-size: 9px;
+  padding: 2px 5px;
+  border-radius: 6px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .preview-task-type.daily {
@@ -480,53 +562,63 @@ body {
   color: #0066cc;
 }
 
+.preview-task-type.future {
+  background-color: #f0e6ff;
+  color: #6600cc;
+}
+
+.preview-task-type.past {
+  background-color: #f5f5f5;
+  color: #666666;
+}
+
 .preview-task-type.postponed {
   background-color: #fff0e6;
   color: #cc6600;
 }
 
 .no-preview-tasks {
-  font-size: 13px;
+  font-size: 11px;
   color: #666;
   text-align: center;
-  padding: 16px;
+  padding: 10px;
   margin: 0;
 }
 
 /* Future todo input in calendar */
 .future-todo-input {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #e9ecef;
 }
 
 .future-todo-input .input-section {
-  gap: 6px;
+  gap: 4px;
 }
 
 .future-todo-input input {
-  font-size: 12px;
-  padding: 6px 10px;
+  font-size: 11px;
+  padding: 5px 8px;
 }
 
 .future-todo-input .btn {
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 5px 8px;
+  font-size: 11px;
 }
 
 /* Future todo section in main view */
 .future-todo-section {
   background: white;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #667eea;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-left: 3px solid #667eea;
 }
 
 .future-todo-section h3 {
-  margin: 0 0 12px 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
+  font-size: 13px;
   font-weight: 600;
   color: #667eea;
 }
@@ -534,34 +626,34 @@ body {
 .future-todo-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .date-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .date-section label {
-  font-size: 13px;
+  font-size: 12px;
   color: #333;
   font-weight: 500;
-  min-width: 60px;
+  min-width: 55px;
 }
 
 .date-input {
   flex: 1;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .date-input:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.15);
 }
 
 /* Preview task actions */
@@ -595,20 +687,64 @@ body {
   color: #721c24;
 }
 
+.preview-move-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+  margin-right: 4px;
+}
+
+.preview-move-btn:hover {
+  background-color: #e3f2fd;
+}
+
+/* Move date picker */
+.move-date-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #e9ecef;
+}
+
+.move-date-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.move-date-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.15);
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
 /* Original date display for postponed tasks */
 .original-date {
-  font-size: 11px;
+  font-size: 10px;
   color: #999;
   font-weight: normal;
-  margin-left: 6px;
+  margin-left: 4px;
   opacity: 0.8;
 }
 
 .progress-display {
-  font-size: 12px;
+  font-size: 11px;
   background: rgba(255, 255, 255, 0.2);
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
   display: inline-block;
   font-weight: 500;
 }
@@ -616,25 +752,93 @@ body {
 /* Responsive design for different sidepanel widths */
 @media (max-width: 320px) {
   .header {
-    padding: 12px;
+    padding: 8px 10px;
+  }
+
+  .header h1 {
+    font-size: 14px;
+  }
+
+  .version-display {
+    font-size: 8px;
+    padding: 1px 3px;
+  }
+
+  .current-date {
+    font-size: 11px;
+  }
+
+  .action-buttons {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  .btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .task-container {
+    padding: 8px;
+  }
+
+  .today-todo-section {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .today-todo-section h3 {
+    font-size: 12px;
+  }
+
+  .input-section input {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  .task-item {
+    padding: 6px 8px;
+  }
+
+  .task-text {
+    font-size: 11px;
+  }
+
+  .task-type {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 400px) {
+  /* Keep compact design */
+}
+
+@media (min-width: 401px) and (max-width: 500px) {
+  .header {
+    padding: 12px 14px;
+  }
+
+  .task-container {
+    padding: 12px 14px;
+  }
+}
+
+@media (min-width: 501px) {
+  .header {
+    padding: 12px 16px;
   }
 
   .header h1 {
     font-size: 16px;
   }
 
-  .version-display {
-    font-size: 9px;
-    padding: 2px 4px;
-  }
-
   .current-date {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .action-buttons {
-    padding: 10px;
-    gap: 8px;
+    padding: 10px 12px;
   }
 
   .btn {
@@ -643,16 +847,16 @@ body {
   }
 
   .task-container {
-    padding: 12px;
+    padding: 12px 16px;
   }
 
   .today-todo-section {
     padding: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .today-todo-section h3 {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .input-section input {
@@ -661,7 +865,7 @@ body {
   }
 
   .task-item {
-    padding: 10px;
+    padding: 10px 12px;
   }
 
   .task-text {
@@ -670,109 +874,15 @@ body {
 
   .task-type {
     font-size: 10px;
-    padding: 2px 6px;
-  }
-}
-
-@media (min-width: 321px) and (max-width: 400px) {
-  .header {
-    padding: 16px;
-  }
-
-  .action-buttons {
-    padding: 12px;
-  }
-
-  .task-container {
-    padding: 16px;
-  }
-
-  .task-item {
-    padding: 12px;
-  }
-}
-
-@media (min-width: 401px) and (max-width: 500px) {
-  .header {
-    padding: 20px 24px;
-  }
-
-  .action-buttons {
-    padding: 16px 20px;
-  }
-
-  .task-container {
-    padding: 20px 24px;
-  }
-
-  .today-todo-section {
-    padding: 18px;
-  }
-
-  .task-item {
-    padding: 16px;
-  }
-}
-
-@media (min-width: 501px) {
-  .header {
-    padding: 24px 30px;
-  }
-
-  .header h1 {
-    font-size: 20px;
-  }
-
-  .current-date {
-    font-size: 15px;
-  }
-
-  .action-buttons {
-    padding: 20px 30px;
-  }
-
-  .btn {
-    padding: 10px 20px;
-    font-size: 15px;
-  }
-
-  .task-container {
-    padding: 24px 30px;
-  }
-
-  .today-todo-section {
-    padding: 20px;
-    margin-bottom: 24px;
-  }
-
-  .today-todo-section h3 {
-    font-size: 15px;
-  }
-
-  .input-section input {
-    font-size: 15px;
-    padding: 10px 14px;
-  }
-
-  .task-item {
-    padding: 18px;
-  }
-
-  .task-text {
-    font-size: 15px;
-  }
-
-  .task-type {
-    font-size: 12px;
-    padding: 4px 10px;
+    padding: 2px 7px;
   }
 
   .no-tasks {
-    padding: 50px 30px;
+    padding: 25px 15px;
   }
 
   .postpone-section {
-    padding: 20px;
-    margin-top: 24px;
+    padding: 12px;
+    margin-top: 12px;
   }
 }
